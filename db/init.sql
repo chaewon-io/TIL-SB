@@ -1,0 +1,4 @@
+# DB 생성
+DROP DATABASE IF EXISTS sbb;
+CREATE DATABASE sbb;
+USE sbb;
