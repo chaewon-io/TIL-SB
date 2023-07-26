@@ -19,10 +19,16 @@ class SbbApplicationTests {
 
 	@Autowired //자동연결
 	private QuestionRepository questionRepository;
+	@Autowired
+	private AnswerRepository answerRepository;
 
 	@BeforeEach
 		// 아래 메서드는 각 테스트케이스가 실행되기 전에 실행된다.
 	void beforeEach() {
+		// 모든 데이터 삭제
+		answerRepository.deleteAll();
+		answerRepository.clearAutoIncrement();
+
 		// 모든 데이터 삭제
 		questionRepository.deleteAll();
 
@@ -113,5 +119,21 @@ class SbbApplicationTests {
 		questionRepository.delete(q);
 		assertEquals(1, questionRepository.count());
 	}
+
+	@Test
+	@DisplayName("답변 데이터 생성 후 저장하기")
+	void t009() {
+		Optional<Question> oq = questionRepository.findById(2);
+		assertTrue(oq.isPresent());
+		Question q = oq.get();
+
+		Answer a = new Answer();
+		a.setContent("네 자동으로 생성됩니다.");
+		a.setQuestion(q);  // 어떤 질문의 답변인지 알기위해서 Question 객체가 필요하다.
+		a.setCreateDate(LocalDateTime.now());
+		answerRepository.save(a);
+	}
+
+
 
 }
