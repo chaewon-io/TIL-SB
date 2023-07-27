@@ -9,7 +9,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="q : ${questionList}"> // questionList 존재하는만큼 th:each가 계속 반복된다
+    <!-- questionList 존재하는만큼 th:each가 계속 반복된다 -->
+    <tr th:each="q : ${questionList}">
         <td th:text="${q.id}"></td>
         <td th:text="${q.subject}"></td>
         <td th:text="${q.createDate}"></td>
