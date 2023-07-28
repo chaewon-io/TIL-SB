@@ -1,8 +1,10 @@
 package com.mysite.sbb.question;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/question")
 @RequiredArgsConstructor
+//@Validated 컨트롤러에서 생략가능
 public class QuestionController {
     private final QuestionService questionService;
 
@@ -40,27 +43,12 @@ public class QuestionController {
     }
 
     @PostMapping("/create")
-    public String questionCreate(String subject, String content) {
-
-        if ( subject == null || subject.trim().length() == 0 ) {
-            throw new RuntimeException("subject(을)를 입력해주세요.");
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+        if ( bindingResult.hasErrors() ) {
+            return "question_form";
         }
-
-        if ( subject.trim().length() > 200 ) {
-            throw new RuntimeException("subject(을)를 200자 이하로 입력해주세요.");
-        }
-
-        if ( content == null || content.trim().length() == 0 ) {
-            throw new RuntimeException("content(을)를 입력해주세요.");
-        }
-
-        if ( content.trim().length() > 20_000 ) {
-            throw new RuntimeException("content(을)를 20,000자 이하로 입력해주세요.");
-        }
-
-        questionService.create(subject, content);
+        questionService.create(questionForm.getSubject(), questionForm.getContent());
 
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
-
 }
