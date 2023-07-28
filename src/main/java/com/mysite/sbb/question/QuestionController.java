@@ -41,11 +41,26 @@ public class QuestionController {
 
     @PostMapping("/create")
     public String questionCreate(String subject, String content) {
+
+        if ( subject == null || subject.trim().length() == 0 ) {
+            throw new RuntimeException("subject(을)를 입력해주세요.");
+        }
+
+        if ( subject.trim().length() > 200 ) {
+            throw new RuntimeException("subject(을)를 200자 이하로 입력해주세요.");
+        }
+
+        if ( content == null || content.trim().length() == 0 ) {
+            throw new RuntimeException("content(을)를 입력해주세요.");
+        }
+
+        if ( content.trim().length() > 20_000 ) {
+            throw new RuntimeException("content(을)를 20,000자 이하로 입력해주세요.");
+        }
+
         questionService.create(subject, content);
 
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
-
-
 
 }
