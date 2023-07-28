@@ -1,21 +1,9 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css">
+<html layout:decorate="~{layout}">
 
-<!--폰트 추가-->
-<style>
-    @font-face {
-        font-family: 'Pretendard-Regular';
-        src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-        font-weight: 400;
-        font-style: normal;
-    }
+<head></head>
 
-    html > body {
-        font-family: "Pretendard-Regular";
-        text-underline-position: under;
-    }
-</style>
-
-<div class="container my-3">
+<body>
+<div layout:fragment="content" class="container my-3">
     <!-- 질문 -->
     <h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
     <div class="card my-3">
@@ -52,3 +40,6 @@
         <input type="submit" value="답변등록" class="btn btn-primary my-2">
     </form>
 </div>
+
+</body>
+</html>

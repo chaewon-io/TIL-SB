@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- 모바일 디바이스에서 화면이 축소되는 것을 방지 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css">
+    <!-- sbb CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <title>Hello, sbb!</title>
+</head>
+<body>
+
+<div class="container">
+    <h1>SBB!</h1>
+
+    <ul class="d-flex" style="gap:30px;">
+        <li><a href="/question/list">리스트</a></li>
+        <li><a href="/sbb">SBB! 란</a></li>
+    </ul>
+</div>
+
+<!-- 기본 템플릿 안에 삽입될 내용 Start -->
+<th:block layout:fragment="content"></th:block>
+<!-- 기본 템플릿 안에 삽입될 내용 End -->
+
+</body>
+</html>
