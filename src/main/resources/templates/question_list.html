@@ -1,23 +1,41 @@
-<h1>질문 목록</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css">
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>번호</th>
-        <th>제목</th>
-        <th>작성일시</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- questionList 존재하는만큼 th:each가 계속 반복된다 -->
-    <tr th:each="q : ${questionList}">
-        <td>
-            <a th:text="${q.id}" th:href="@{|/question/detail/${q.id}|}"></a>
-        </td>
-        <td>
-            <a th:text="${q.subject}" th:href="@{|/question/detail/${q.id}|}"></a>
-        </td>
-        <td th:text="${q.createDate}"></td>
-    </tr>
-    </tbody>
-</table>
+<style>
+    @font-face {
+        font-family: 'GmarketSansMedium';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    html > body {
+        font-family: "GmarketSansMedium";
+        text-underline-position: under;
+    }
+</style>
+
+<div class="container my-3">
+
+    <table class="table">
+
+        <thead class="table-dark">
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="q, loop : ${questionList}">
+            <td>
+                <a th:text="${loop.count}" th:href="@{|/question/detail/${q.id}|}"></a>
+            </td>
+            <td>
+                <a th:text="${q.subject}" th:href="@{|/question/detail/${q.id}|}"></a>
+            </td>
+            <td th:text="${#temporals.format(q.createDate, 'yy-MM-dd HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
