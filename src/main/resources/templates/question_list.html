@@ -15,7 +15,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="q, loop : ${questionList}">
+        <tr th:each="q, loop : ${paging}">
             <td>
                 <a th:text="${loop.count}" th:href="@{|/question/detail/${q.id}|}"></a>
             </td>
@@ -26,6 +26,21 @@
         </tr>
         </tbody>
     </table>
+
+    <nav th:if="${!paging.isEmpty()}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number - 1}|}">이전</a>
+            </li>
+            <li class="page-item" th:classappend="${paging.number == page} ? 'active'"
+                th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}">
+                <a class="page-link" th:href="@{|?page=${page}|}" th:text="${page}"></a>
+            </li>
+            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number + 1}|}">다음</a>
+            </li>
+        </ul>
+    </nav>
 
     <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
 
