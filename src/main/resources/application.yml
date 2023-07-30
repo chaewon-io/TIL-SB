@@ -19,9 +19,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create # DB 테이블 자동생성
+      default_batch_fetch_size=1000:
 
   # LOGGING
   logging:
     level:
       org.hibernate.orm.jdbc.bind: TRACE
       org.hibernate.orm.jdbc.extract: TRACE
+
+
