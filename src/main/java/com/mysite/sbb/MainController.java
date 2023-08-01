@@ -22,9 +22,4 @@ public class MainController {
         return "redirect:/question/list";
     }
 
-    @GetMapping("/test")
-    @ResponseBody
-    public String showTest() {
-        return "로그인 검증 테스트";
-    }
 }
