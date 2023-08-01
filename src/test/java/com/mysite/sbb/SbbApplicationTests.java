@@ -146,6 +146,8 @@ class SbbApplicationTests {
 		assertEquals(1, questionRepository.count());
 	}
 
+	@Transactional
+	@Rollback(false)
 	@Test
 	@DisplayName("답변 데이터 생성 후 저장하기")
 	void t009() {
