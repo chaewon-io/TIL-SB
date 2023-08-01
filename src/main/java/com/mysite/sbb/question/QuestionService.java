@@ -40,6 +40,7 @@ public class QuestionService {
 
     public Question create(String subject, String content, SiteUser author) {
         Question q = new Question();
+        q.setCreateDate(LocalDateTime.now());
         q.setSubject(subject);
         q.setContent(content);
         q.setAuthor(author);
