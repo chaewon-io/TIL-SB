@@ -49,7 +49,7 @@ public class AnswerController {
         // 답변객체
         Answer answer = answerService.create(question, answerForm.getContent(), siteUser);
 
-        return "redirect:/question/detail/%d".formatted(id);
+        return "redirect:/question/detail/%d#answer_%d".formatted(id, answer.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -82,7 +82,7 @@ public class AnswerController {
 
         answerService.modify(answer, answerForm.getContent());
 
-        return "redirect:/question/detail/%d".formatted(answer.getQuestion().getId());
+        return "redirect:/question/detail/%d#answer_%d".formatted(answer.getQuestion().getId(), id);
     }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
@@ -106,6 +106,6 @@ public class AnswerController {
 
         answerService.vote(answer, siteUser);
 
-        return "redirect:/question/detail/%d".formatted(answer.getQuestion().getId());
+        return "redirect:/question/detail/%d#answer_%d".formatted(answer.getQuestion().getId(), id);
     }
 }
