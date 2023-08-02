@@ -27,7 +27,7 @@ public class QuestionController {
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(defaultValue = "0") int page) {
-        Page<Question> paging = questionService.getList(page);
+        Page<Question> paging = questionService.getList(page, null);
         // 스프링에서 제공하는 자료구조로 List와 유사하며 보통 page의 결과로 담는다.
         model.addAttribute("paging", paging);
 
