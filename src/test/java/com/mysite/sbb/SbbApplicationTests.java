@@ -249,7 +249,4 @@ class SbbApplicationTests {
 		IntStream.rangeClosed(3, 300).forEach(no -> questionService.create("테스트 제목입니다. %d".formatted(no), "테스트 내용입니다. %d".formatted(no), user2));
 	}
 
-
-
-
 }
