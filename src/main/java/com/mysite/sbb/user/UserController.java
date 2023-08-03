@@ -67,7 +67,8 @@ public class UserController {
         String username = principal.getName();
 
         model.addAttribute("username", username);
-        model.addAttribute("questionList", questionService.getCurrentListByUser(username));
+        model.addAttribute("questionList",
+                questionService.getCurrentListByUser(username, 5));
 
         return "profile";
     }

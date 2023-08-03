@@ -99,9 +99,9 @@ public class QuestionService {
         questionRepository.save(question);
     }
 
-    public List<Question> getCurrentListByUser(String username) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "createDate"); // 최근 작성된 순으로 정렬
-        return questionRepository.findCurrentQuestion(username, sort);
+    public Object getCurrentListByUser(String username, int num) {
+        Pageable pageable = PageRequest.of(0, num);
+        return questionRepository.findCurrentQuestion(username, pageable);
     }
 
 }
