@@ -1,19 +1,27 @@
 package com.mysite.sbb.user;
 
+import com.mysite.sbb.question.Question;
+import com.mysite.sbb.question.QuestionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.security.Principal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final QuestionService questionService;
 
     @GetMapping("/login")
     public String login() {
@@ -52,4 +60,16 @@ public class UserController {
 
         return "redirect:/";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("profile")
+    public String profile(Principal principal, Model model) {
+        String username = principal.getName();
+
+        model.addAttribute("username", username);
+        model.addAttribute("questionList", questionService.getCurrentListByUser(username));
+
+        return "profile";
+    }
+
 }

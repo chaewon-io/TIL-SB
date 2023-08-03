@@ -32,6 +32,7 @@ public class Question {
 
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
+
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int view;
 
@@ -59,5 +60,7 @@ public class Question {
     public void addVoter(SiteUser voter) {
         voters.add(voter);
     }
+
+
 }
 

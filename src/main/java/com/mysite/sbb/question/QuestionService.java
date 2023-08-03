@@ -5,6 +5,7 @@ import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.user.SiteUser;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -97,4 +98,12 @@ public class QuestionService {
         question.addVoter(voter);
         questionRepository.save(question);
     }
+
+    public List<Question> getCurrentListByUser(String username) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createDate"); // 최근 작성된 순으로 정렬
+        return questionRepository.findCurrentQuestion(username, sort);
+    }
+
 }
+
+
