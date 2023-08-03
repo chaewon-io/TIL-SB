@@ -60,10 +60,15 @@ public class QuestionService {
     public Question getQuestion(Integer id) {
         Optional<Question> oq = questionRepository.findById(id);
 
-        if (oq.isPresent() == false) throw new DataNotFoundException("question not found");
+        if (oq.isPresent() == false) {
+            throw new DataNotFoundException("question not found");
+        }
 
-        return oq.get();
+        Question question = oq.get();
+        question.setView(question.getView() + 1);
+        questionRepository.save(question);
 
+        return question;
     }
 
     public Question create(String subject, String content, SiteUser author) {

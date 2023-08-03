@@ -32,6 +32,8 @@ public class Question {
 
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view;
 
     //실제 DB 테이블에 칼럼이 생성되지 않는다. -> DB는 배열이나 리스트를 칼럼에 저장할 수 없기 때문
     //CascadeType.REMOVE : 질문을 삭제하면 그에 달린 답변들도 모두 함께 삭제하기 위해서
