@@ -2,6 +2,8 @@ package com.mysite.sbb.question;
 
 import com.mysite.sbb.answer.AnswerForm;
 import com.mysite.sbb.answer.AnswerService;
+import com.mysite.sbb.category.Category;
+import com.mysite.sbb.category.CategoryService;
 import com.mysite.sbb.user.SiteUser;
 import com.mysite.sbb.user.UserService;
 import jakarta.validation.Valid;
@@ -16,25 +18,42 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
-import java.util.List;
+
+//import static org.yaml.snakeyaml.TypeDescription.log;
+
 
 @Controller
 @RequestMapping("/question")
 @RequiredArgsConstructor
 //@Validated 컨트롤러에서 생략가능
 public class QuestionController {
+
     private final QuestionService questionService;
     private final UserService userService;
     private final AnswerService answerService;
+    private final CategoryService categoryService;
+
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(defaultValue = "0") int page, String kw) {
-        Page<Question> paging = questionService.getList(page, kw);
+        Page<Question> paging = questionService.getList(page, kw, null);
+
         // 스프링에서 제공하는 자료구조로 List와 유사하며 보통 page의 결과로 담는다.
         model.addAttribute("paging", paging);
 
         return "question_list";
     }
+
+
+    @GetMapping("/freepost/list")
+    public String freepostList(Model model, @RequestParam(value="page", defaultValue="0") int page,
+                               @RequestParam(value = "kw", defaultValue = "") String kw) {
+        Page<Question> paging = this.questionService.getList(page, kw, "자유");
+        model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
+        return "question_list";
+    }
+
 
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
@@ -45,28 +64,35 @@ public class QuestionController {
         return "question_detail";
     }
 
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    public String questionCreate(QuestionForm QuestionForm) {
+    public String questionCreate(Model model) {
+        model.addAttribute("categoryList", categoryService.getList());
+        model.addAttribute("questionForm", new QuestionForm()); // QuestionForm을 직접 모델에 추가
         return "question_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String questionCreate(
-            @Valid QuestionForm questionForm,
+            @Valid @ModelAttribute("questionForm") QuestionForm questionForm,
             BindingResult bindingResult,
-            Principal principal
+            Principal principal,
+            Model model
     ) {
         if ( bindingResult.hasErrors() ) {
+            model.addAttribute("categoryList", categoryService.getList());
             return "question_form";
         }
         SiteUser siteUser = userService.getUser(principal.getName());
+        Category category = categoryService.getCategory(questionForm.getCategory());
 
-        questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
-        
+        questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser, category);
+
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
@@ -84,22 +110,17 @@ public class QuestionController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modify/{id}")
-    public String questionModify(@Valid QuestionForm questionForm, BindingResult bindingResult,
-                                 Principal principal, @PathVariable("id") Integer id) {
+    @PostMapping("/question/create")
+    public String questionCreate(Model model, @Valid QuestionForm questionForm,
+                                 BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("categoryList", categoryService.getList());
             return "question_form";
         }
-
-        Question question = questionService.getQuestion(id);
-
-        if (!question.getAuthor().getUsername().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
-        }
-
-        questionService.modify(question, questionForm.getSubject(), questionForm.getContent());
-
-        return "redirect:/question/detail/%d".formatted(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        Category category = this.categoryService.getCategory(questionForm.getCategory());
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser, category);
+        return "redirect:/question/list";
     }
 
     @PreAuthorize("isAuthenticated()")

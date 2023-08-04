@@ -15,4 +15,7 @@ public class QuestionForm {
     @NotBlank(message = "내용은 필수항목입니다.")
     @Size(max = 200, message = "내용을 20,000자 이하로 입력해주세요.")
     private String content;
+
+    @NotBlank(message="카테고리는 필수항목입니다.")
+    private String category;
 }

@@ -3,6 +3,8 @@ package com.mysite.sbb;
 import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.answer.AnswerRepository;
 import com.mysite.sbb.answer.AnswerService;
+import com.mysite.sbb.category.Category;
+import com.mysite.sbb.category.CategoryService;
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionRepository;
 import com.mysite.sbb.question.QuestionService;
@@ -40,6 +42,8 @@ class SbbApplicationTests {
 	private AnswerRepository answerRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private CategoryService categoryService;
 
 	@BeforeEach
 		// 아래 메서드는 각 테스트케이스가 실행되기 전에 실행된다.
@@ -62,11 +66,17 @@ class SbbApplicationTests {
 		SiteUser user1 = userService.create("user1", "user1@test.com", "1234");
 		SiteUser user2 = userService.create("user2", "user2@test.com", "1234");
 
-		// 질문 1개 생성
-		Question q1 = questionService.create("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.", user1);
+		//카테고리 2개 생성
+		String category1Name = "Category1";
+		String category2Name = "Category2";
+		Category category1 = categoryService.getCategory(category1Name);
+		Category category2 = categoryService.getCategory(category2Name);
 
 		// 질문 1개 생성
-		Question q2 = questionService.create("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?", user1);
+		Question q1 = questionService.create("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.", user1, category1);
+
+		// 질문 1개 생성
+		Question q2 = questionService.create("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?", user1, category2);
 
 		Answer a1 = answerService.create(q2, "네 자동으로 생성됩니다.", user2);
 
@@ -89,10 +99,13 @@ class SbbApplicationTests {
 	@Test
 	@DisplayName("데이터 저장")
 	void t001() {
+		
 		SiteUser user1 = userService.getUser("user1");
-
+		String categoryName = "SomeCategoryName";
+		Category category = categoryService.getCategory(categoryName);
+		
 		// 질문 1개 생성
-		Question q = questionService.create("세계에서 가장 부유한 국가가 어디인가요?", "알고 싶습니다.", user1);
+		Question q = questionService.create("세계에서 가장 부유한 국가가 어디인가요?", "알고 싶습니다.", user1, category);
 	}
 
 	@Test
@@ -202,7 +215,7 @@ class SbbApplicationTests {
 	@Test
 	@DisplayName("검색, 질문 제목으로 검색할 수 있다.")
 	void t012() {
-		Page<Question> searchResult = questionService.getList(0, "sbb가 무엇인가요");
+		Page<Question> searchResult = questionService.getList(0, "sbb가 무엇인가요", "");
 
 		assertEquals(1, searchResult.getTotalElements());
 	}
@@ -210,7 +223,7 @@ class SbbApplicationTests {
 	@Test
 	@DisplayName("검색, 질문 내용으로 검색할 수 있다.")
 	void t013() {
-		Page<Question> searchResult = questionService.getList(0, "sbb에 대해서 알고 싶습니다.");
+		Page<Question> searchResult = questionService.getList(0, "sbb에 대해서 알고 싶습니다.", "");
 
 		assertEquals(1, searchResult.getTotalElements());
 	}
@@ -218,7 +231,7 @@ class SbbApplicationTests {
 	@Test
 	@DisplayName("검색, 질문자 이름으로 검색할 수 있다.")
 	void t014() {
-		Page<Question> searchResult = questionService.getList(0, "user1");
+		Page<Question> searchResult = questionService.getList(0, "user1", "");
 
 		assertEquals(2, searchResult.getTotalElements());
 	}
@@ -226,7 +239,7 @@ class SbbApplicationTests {
 	@Test
 	@DisplayName("검색, 답변 내용으로 검색할 수 있다.")
 	void t015() {
-		Page<Question> searchResult = questionService.getList(0, "네 자동으로 생성됩니다.");
+		Page<Question> searchResult = questionService.getList(0, "네 자동으로 생성됩니다.", "");
 
 		assertEquals(2, searchResult.getContent().get(0).getId());
 		assertEquals(1, searchResult.getTotalElements());
@@ -235,7 +248,7 @@ class SbbApplicationTests {
 	@Test
 	@DisplayName("검색, 답변자 이름으로 검색할 수 있다.")
 	void t016() {
-		Page<Question> searchResult = questionService.getList(0, "user2");
+		Page<Question> searchResult = questionService.getList(0, "user2", "");
 
 		assertEquals(2, searchResult.getContent().get(0).getId());
 		assertEquals(1, searchResult.getTotalElements());
@@ -245,8 +258,14 @@ class SbbApplicationTests {
 	@DisplayName("대량 테스트 데이터 만들기")
 	void t999() {
 		SiteUser user2 = userService.getUser("user2");
+		Category category = categoryService.getCategory("카테고리명");
 
-		IntStream.rangeClosed(3, 300).forEach(no -> questionService.create("테스트 제목입니다. %d".formatted(no), "테스트 내용입니다. %d".formatted(no), user2));
+		IntStream.rangeClosed(3, 300).forEach(no -> questionService.create(
+				"테스트 제목입니다. %d".formatted(no),
+				"테스트 내용입니다. %d".formatted(no),
+				user2,
+				category
+		));
 	}
 
 }

@@ -2,6 +2,8 @@ package com.mysite.sbb.question;
 
 import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.user.SiteUser;
+import com.mysite.sbb.category.Category;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,6 +63,13 @@ public class Question {
         voters.add(voter);
     }
 
+    @ManyToOne
+    private Category category;
+
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
 }
 

@@ -19,6 +19,13 @@
                 <li class="nav-item">
                     <a sec:authorize="isAuthenticated()" class="nav-link" th:href="@{/user/profile}">프로필</a>
                 </li>
+                <li>
+                    <a class="nav-link" th:href="@{/question/list}">질문 게시판</a>
+                </li>
+                <li>
+                    <a class="nav-link" th:href="@{/freepost/list}">자유 게시판</a>
+                </li>
+
             </ul>
         </div>
     </div>
