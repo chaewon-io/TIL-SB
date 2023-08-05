@@ -62,7 +62,7 @@ public class QuestionService {
             }
         };
     }
-
+정
     public Category getCategory(String categoryName) {
         return categoryService.getCategoryByName(categoryName);
     }

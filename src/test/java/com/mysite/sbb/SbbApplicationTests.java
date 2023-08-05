@@ -212,6 +212,7 @@ class SbbApplicationTests {
 		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
 	}
 
+	//TODO: 테스트 코드 오류 수정
 	@Test
 	@DisplayName("검색, 질문 제목으로 검색할 수 있다.")
 	void t012() {
@@ -219,6 +220,7 @@ class SbbApplicationTests {
 
 		assertEquals(1, searchResult.getTotalElements());
 	}
+
 
 	@Test
 	@DisplayName("검색, 질문 내용으로 검색할 수 있다.")

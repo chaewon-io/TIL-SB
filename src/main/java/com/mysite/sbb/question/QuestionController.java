@@ -73,6 +73,7 @@ public class QuestionController {
         return "question_form";
     }
 
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String questionCreate(
