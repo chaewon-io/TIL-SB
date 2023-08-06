@@ -66,7 +66,6 @@ public class Question {
     @ManyToOne
     private Category category;
 
-
     public void setCategory(Category category) {
         this.category = category;
     }

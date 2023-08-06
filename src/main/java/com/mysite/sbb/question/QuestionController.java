@@ -35,33 +35,26 @@ public class QuestionController {
 
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(defaultValue = "0") int page, String kw) {
-        Page<Question> paging = questionService.getList(page, kw, null);
-
-        // 스프링에서 제공하는 자료구조로 List와 유사하며 보통 page의 결과로 담는다.
-        model.addAttribute("paging", paging);
-
-        return "question_list";
-    }
-
-
-    @GetMapping("/freepost/list")
-    public String freepostList(Model model, @RequestParam(value="page", defaultValue="0") int page,
-                               @RequestParam(value = "kw", defaultValue = "") String kw) {
-        Page<Question> paging = this.questionService.getList(page, kw, "자유");
+    public String List(Model model, @RequestParam(value="page", defaultValue="0") int page,
+                       @RequestParam(value = "kw", defaultValue = "") String kw,
+                       @RequestParam(value = "category", defaultValue = "질문") String category) {
+        System.out.println("kw: " + kw);
+        System.out.println("category: " + category);
+        Page<Question> paging = this.questionService.getList(page, kw, category);
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
         return "question_list";
     }
 
 
-    @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
-        Question question = questionService.getQuestion(id);
-
-        model.addAttribute("question", question);
-
-        return "question_detail";
+    @GetMapping("/freepost/list")
+    public String freepostList(Model model, @RequestParam(value="page", defaultValue="0") int page,
+                               @RequestParam(value = "kw", defaultValue = "") String kw,
+                               @RequestParam(value = "category", defaultValue = "자유") String category) {
+        Page<Question> paging = this.questionService.getList(page, kw, category);
+        model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
+        return "question_list";
     }
 
 
@@ -94,6 +87,15 @@ public class QuestionController {
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
 
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
+        Question question = questionService.getQuestion(id);
+
+        model.addAttribute("question", question);
+
+        return "question_detail";
+    }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
@@ -110,19 +112,6 @@ public class QuestionController {
         return "question_form";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/question/create")
-    public String questionCreate(Model model, @Valid QuestionForm questionForm,
-                                 BindingResult bindingResult, Principal principal) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("categoryList", categoryService.getList());
-            return "question_form";
-        }
-        SiteUser siteUser = this.userService.getUser(principal.getName());
-        Category category = this.categoryService.getCategory(questionForm.getCategory());
-        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser, category);
-        return "redirect:/question/list";
-    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")

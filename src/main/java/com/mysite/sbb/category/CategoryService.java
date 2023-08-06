@@ -11,6 +11,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public Category getCategoryByName(String categoryName) {
+        System.out.println("categoryName in getCategory: " + categoryName);
         return categoryRepository.findByName(categoryName);
     }
 
