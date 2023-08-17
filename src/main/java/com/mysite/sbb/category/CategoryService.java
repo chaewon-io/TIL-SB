@@ -1,25 +1,40 @@
-package com.mysite.sbb.category;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-@Service
-@RequiredArgsConstructor
-public class CategoryService {
-    private final CategoryRepository categoryRepository;
-
-    public Category getCategoryByName(String categoryName) {
-        System.out.println("categoryName in getCategory: " + categoryName);
-        return categoryRepository.findByName(categoryName);
-    }
-
-    public List<Category> getList() {
-        return categoryRepository.findAll();
-    }
-
-    public Category getCategory(String categoryName) {
-        return categoryRepository.findByName(categoryName);
-    }
-}
+//package com.mysite.sbb.category;
+//
+//import com.mysite.sbb.DataNotFoundException;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.stereotype.Service;
+//
+//import java.time.LocalDateTime;
+//import java.util.List;
+//import java.util.Optional;
+//
+//@RequiredArgsConstructor
+//@Service
+//public class CategoryService {
+//
+//    private final CategoryRepository categoryRepository;
+//
+//    public Category getCategoryByTitle(String title) {
+//        Optional<Category> category = this.categoryRepository.findByTitle(title);
+//
+//        if (category.isEmpty()) {
+//            category = Optional.ofNullable(create(title));
+//        }
+//
+//        if(category.isPresent()){
+//            return category.get();
+//        }else{
+//            throw new DataNotFoundException("question Not Found");
+//        }
+//
+//    }
+//
+//    public Category create(String title) {
+//        Category category = new Category();
+//        category.setTitle(title);
+//        category.setCreateDate(LocalDateTime.now());
+//        this.categoryRepository.save(category);
+//        return category;
+//    }
+//
+//}

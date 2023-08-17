@@ -35,6 +35,7 @@
             <th>글쓴이</th>
             <th>작성일시</th>
             <th>조회수</th>
+            <th>카테고리</th>
         </tr>
         </thead>
         <tbody>
@@ -52,6 +53,7 @@
             <td th:text="${q.author.username}"></td>
             <td th:text="${#temporals.format(q.createDate, 'yy-MM-dd HH:mm')}"></td>
             <td th:text="${q.view}"></td>
+            <td><span th:text="${q.category}"></span></td>
         </tr>
         </tbody>
     </table>

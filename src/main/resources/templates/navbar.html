@@ -1,4 +1,5 @@
-<nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+<nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light bg-light border-bottom"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">SBB</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -19,13 +20,6 @@
                 <li class="nav-item">
                     <a sec:authorize="isAuthenticated()" class="nav-link" th:href="@{/user/profile}">프로필</a>
                 </li>
-                <li>
-                    <a class="nav-link" th:href="@{/question/list}">질문 게시판</a>
-                </li>
-                <li>
-                    <a class="nav-link" th:href="@{/question/freepost/list}">자유 게시판</a>
-                </li>
-
             </ul>
         </div>
     </div>
