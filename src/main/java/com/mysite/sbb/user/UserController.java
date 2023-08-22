@@ -65,8 +65,10 @@ public class UserController {
     @GetMapping("profile")
     public String profile(Principal principal, Model model) {
         String username = principal.getName();
+        SiteUser user = userService.findByUsername(username);
 
         model.addAttribute("username", username);
+        model.addAttribute("email", user.getEmail());
         model.addAttribute("questionList",
                 questionService.getCurrentListByUser(username, 5));
 
