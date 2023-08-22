@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
@@ -69,10 +70,35 @@ public class UserController {
 
         model.addAttribute("username", username);
         model.addAttribute("email", user.getEmail());
+        model.addAttribute("introduction", user.getIntroduction());
         model.addAttribute("questionList",
                 questionService.getCurrentListByUser(username, 5));
 
         return "profile";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("settings")
+    public String settings(Principal principal, Model model) {
+        String username = principal.getName();
+        SiteUser user = userService.findByUsername(username);
+
+        model.addAttribute("username", username);
+        model.addAttribute("introduction", user.getIntroduction());
+
+        return "settings";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("settings")
+    public String saveSettings(Principal principal, @RequestParam String introduction) {
+        String username = principal.getName();
+        SiteUser user = userService.findByUsername(username);
+        user.setIntroduction(introduction);
+        userService.save(user);
+
+        return "redirect:/user/profile";
+    }
+
 
 }

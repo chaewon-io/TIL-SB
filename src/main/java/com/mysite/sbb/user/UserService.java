@@ -40,4 +40,8 @@ public class UserService {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new DataNotFoundException("User not found with username: " + username));
     }
+
+    public void save(SiteUser user) {
+        userRepository.save(user);
+    }
 }
