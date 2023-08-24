@@ -44,4 +44,16 @@ public class UserService {
     public void save(SiteUser user) {
         userRepository.save(user);
     }
+
+    public void changePassword(String username, String currentPassword, String newPassword) {
+        SiteUser user = findByUsername(username);
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedNewPassword);
+        save(user);
+    }
 }
