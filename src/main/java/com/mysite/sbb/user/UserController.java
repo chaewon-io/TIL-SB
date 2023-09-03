@@ -1,22 +1,19 @@
 package com.mysite.sbb.user;
 
-import com.mysite.sbb.question.Question;
+import com.mysite.sbb.Message.Message;
 import com.mysite.sbb.question.QuestionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -24,6 +21,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final QuestionService questionService;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @GetMapping("/login")
     public String login() {
@@ -86,6 +84,7 @@ public class UserController {
 
         model.addAttribute("username", username);
         model.addAttribute("introduction", user.getIntroduction());
+        model.addAttribute("passwordResetForm", new PasswordResetForm());
 
         return "settings";
     }
@@ -101,5 +100,47 @@ public class UserController {
         return "redirect:/user/profile";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/password/reset")
+    public String resetPassword(PasswordResetForm passwordResetForm) {
+        return "password_reset_form"; // 비밀번호 변경 페이지를 렌더링
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/password/reset")
+    public String resetPassword(@Valid @ModelAttribute("passwordResetForm")
+                                 PasswordResetForm passwordResetForm, BindingResult bindingResult, Principal principal, Model model) {
+        SiteUser user = this.userService.getUser(principal.getName());
+
+        if (bindingResult.hasErrors()) {
+            return "password_reset_form"; // 비밀번호 변경 페이지를 다시 렌더링하고 오류 표시
+        }
+
+        if (!this.userService.isSamePassword(user, passwordResetForm.getCurrentPassword())) {
+            bindingResult.rejectValue("currentPassword", "notCurrentPassword", "현재 비밀번호와 일치하지 않습니다.");
+            return "password_reset_form";
+        }
+
+        if (passwordResetForm.getNewPassword().equals(passwordResetForm.getCurrentPassword())) {
+            bindingResult.rejectValue("newPassword", "sameAsCurrentPassword", "현재 비밀번호와 동일한 비밀번호입니다.");
+            return "password_reset_form";
+        }
+
+        if (!passwordResetForm.getNewPassword().equals(passwordResetForm.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
+            return "password_reset_form";
+        }
+
+        try {
+            userService.resetPassword(user, passwordResetForm.getNewPassword());
+        } catch (Exception e) {
+            e.printStackTrace();
+            bindingResult.reject("modifyPasswordFailed", e.getMessage());
+            return "password_reset_form";
+        }
+
+        model.addAttribute("data", new Message("비밀번호 변경 되었습니다.", "/"));
+        return "password_reset_form"; // 변경 성공
+    }
 
 }

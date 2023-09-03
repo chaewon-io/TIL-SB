@@ -13,7 +13,6 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final PasswordEncoder passwordEncoder;
-
     private final UserRepository userRepository;
 
     public SiteUser getUser(String username) {
@@ -36,6 +35,7 @@ public class UserService {
         return user;
     }
 
+
     public SiteUser findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new DataNotFoundException("User not found with username: " + username));
@@ -45,15 +45,13 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void changePassword(String username, String currentPassword, String newPassword) {
-        SiteUser user = findByUsername(username);
-
-        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
-        }
-
-        String encodedNewPassword = passwordEncoder.encode(newPassword);
-        user.setPassword(encodedNewPassword);
-        save(user);
+    public void resetPassword(SiteUser modifyUser, String password) {
+        modifyUser.setPassword(passwordEncoder.encode(password));
+        this.userRepository.save(modifyUser);
     }
+
+    public boolean isSamePassword(SiteUser user, String password){
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
 }

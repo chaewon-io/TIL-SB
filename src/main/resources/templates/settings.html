@@ -17,13 +17,16 @@
           <button class="nav-link active" id="base-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">기본정보</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">비밀번호 변경</button>
+          <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button" role="tab" aria-controls="password" aria-selected="false">비밀번호 변경</button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">프로필 이미지 변경</button>
         </li>
       </ul>
+
+
       <div class="tab-content" id="myTabContent">
+
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
           <!-- "기본정보" 탭 내용 -->
           <div class="col-lg-8">
@@ -43,7 +46,19 @@
           </div>
         </div>
 
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="password-tab">...</div>
+        <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+          <!-- "비밀번호 변경" 탭 내용 -->
+          <div class="col-lg-8">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h5 class="card-title">비밀번호 변경</h5>
+                <!-- 비밀번호 변경하기 버튼 -->
+                <a href="/user/password/reset" class="btn btn-secondary">비밀번호 변경하러 가기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="profile-tab">...</div>
       </div>
 
