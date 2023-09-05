@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -21,16 +23,28 @@ public class UserService {
         if (siteUser.isPresent()) {
             return siteUser.get();
         } else {
-            throw new DataNotFoundException("siteuser not found");
+            return null;
         }
     }
 
+    @Transactional
     public SiteUser create(String username, String email, String password) {
+        return join("SBB", username, email, password);
+    }
+
+    private SiteUser join(String providerTypeCode, String username, String email, String password) {
+        if (getUser(username) !=null) {
+            throw new RuntimeException("해당 ID는 이미 사용중입니다.");
+        }
+
+        if (StringUtils.hasText(password)) password = passwordEncoder.encode(password);
+
+
         SiteUser user = new SiteUser();
         user.setUsername(username);
         user.setEmail(email);
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); //비밀번호는 보안을 위해 반드시 암호화하여 저장
-        user.setPassword(passwordEncoder.encode(password));
+        user.setProviderTypeCode(providerTypeCode);
+        user.setPassword(password);
         userRepository.save(user);
         return user;
     }
@@ -53,5 +67,15 @@ public class UserService {
     public boolean isSamePassword(SiteUser user, String password){
         return passwordEncoder.matches(password, user.getPassword());
     }
+
+    @Transactional
+    public SiteUser whenSocialLogin(String providerTypeCode, String username) {
+        SiteUser siteUser = getUser(username);
+
+        if (siteUser != null) return siteUser;
+
+        return join(providerTypeCode, username, "", "");
+    }
+
 
 }

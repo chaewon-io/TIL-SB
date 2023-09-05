@@ -36,5 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-### Custom ###
+# application-secret.yml 파일을 무시
 application-secret.yml
