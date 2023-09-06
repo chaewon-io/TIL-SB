@@ -143,4 +143,21 @@ public class UserController {
         return "password_reset_form"; // 변경 성공
     }
 
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/forgotPassword")
+    public String findPassword() {
+
+        return "forgot_password";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/sendEmail")
+    public String sendEmail(@RequestParam String email) {
+        System.out.println("email  : " + email);
+        MailForm mailForm = userService.createMailForm(email);
+        userService.sendEmail(mailForm);
+
+        return "redirect:/user/login";
+    }
+
 }

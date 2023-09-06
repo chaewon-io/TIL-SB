@@ -17,6 +17,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+
                 .formLogin(
                         formLogin -> formLogin
                                 // GET

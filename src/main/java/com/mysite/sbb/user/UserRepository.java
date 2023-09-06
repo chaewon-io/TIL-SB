@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<SiteUser, Long> {
@@ -15,4 +16,6 @@ public interface UserRepository extends JpaRepository<SiteUser, Long> {
     void clearAutoIncrement();
 
     Optional<SiteUser> findByUsername(String username);
+
+    Optional<SiteUser> findByEmail(String email);
 }

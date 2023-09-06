@@ -2,8 +2,8 @@ server:
   port: 8080
 spring:
   thymeleaf:
-    cache: false # 타임리프 캐시 끄기
-    prefix: file:src/main/resources/templates/ # 타임리프 캐시 끄기(이 설정을 해야 꺼짐)
+    cache: false
+    prefix: file:src/main/resources/templates/
   devtools:
     livereload:
       enabled: true
@@ -36,13 +36,21 @@ spring:
             user-name-attribute: id
   jpa:
     hibernate:
-      ddl-auto: create # DB 테이블 자동생성
-      default_batch_fetch_size=1000:
+      ddl-auto: create
+      default_batch_fetch_size: 1000
 
-  # LOGGING
-  logging:
-    level:
-      org.hibernate.orm.jdbc.bind: TRACE
-      org.hibernate.orm.jdbc.extract: TRACE
-
-
+  mail:
+    host: smtp.naver.com
+    port:
+    username:
+    password:
+    properties:
+      debug: true
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          starttls:
+            enable: true
+          trust: smtp.naver.com
