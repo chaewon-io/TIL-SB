@@ -1,6 +1,7 @@
 # Today I Learn 'SBB'
 스프링부트 기초를 다지기 위해 매일 공부합니다.  
 교재 : [점프 투 스프링부트](https://wikidocs.net/book/7601)   
+기간 : 2023년 06월 ~ 진행중  
 기술 블로그 : [chaewon-io.log](https://velog.io/@chaewon22?tag=%EC%A0%90%ED%94%84%ED%88%AC%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8) 
 
 <img width="1000" height="500" alt="스크린샷 2023-09-08 오전 12 13 26" src="https://github.com/chaewon-io/TIL-SB/assets/82140052/3247784d-0af6-4db2-a836-4864c4819837">       
